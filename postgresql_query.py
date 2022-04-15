@@ -127,6 +127,14 @@ if __name__ == '__main__':
         CONF = toml.load(conf_file)["postgresql_custom"]
     if "address" in CONF:
         PG = PGQuerier(dsn=CONF["address"])
+    elif "POSTGRES_HOST" in os.environ:
+        user = os.environ.get('POSTGRES_USER','')
+        password = os.environ.get('POSTGRES_PASSWORD','')
+        host = os.environ.get('POSTGRES_HOST','')
+        port = os.environ.get('POSTGRES_PORT', 5432)
+        db = os.environ.get('POSTGRES_DB','')
+        dsn = "postgres://%s:%s@%s:%s/%s" % (user,password,host,port,db)
+        PG = PGQuerier(dsn=dsn)
     else:
         PG = PGQuerier()
     while True:
